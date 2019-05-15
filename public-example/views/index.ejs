@@ -1,0 +1,25 @@
+<%- include('partials/head') %>
+<%- include('partials/header')%>
+<main class="container">
+    <h6 name="pollName" id="poll-name" type="text"><%= data[0][0].poll_name %></h6>
+    <form action="/api/poll/vote/<%= data[0][0].poll_slug %>" method="POST">
+        <% if(data[0][0].poll_type === 'One') { %>
+        <div class="form-group">
+            <% data[1].map(function(el) {%>
+                <input data-option="option" class="form-control" type="radio" name="option" value="<%= el.option_name %>" />
+                <label><%= el.option_name %></label>    
+            <% }) %>
+        </div>
+       <% } %>
+        <% if(data[0][0].poll_type === 'Many') { %>
+            <% data[1].map(function(el) {%>
+                <div class="form-group form-check">
+                   <input data-option="option" class="form-check-input" type="checkbox" name="option" value="<%= el.option_name %>" />
+                   <label class="form-check-label"><%= el.option_name %></label>    
+                </div>
+            <% }) %>
+         <% } %>
+        <input class="btn btn-lg btn-success" type="submit" value="Submit" />
+    </form>
+</main>
+<%- include('partials/footer')%>

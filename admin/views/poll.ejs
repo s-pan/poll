@@ -1,0 +1,41 @@
+<%- include('partials/head.ejs')%>
+<main class="container">
+<%- include('partials/nav.ejs')%>
+<form class="form" action="/admin/poll/update/<%= data[0][0].poll_name %>" method="POST">
+    <fieldset class="form-group">
+    <legend>Update poll</legend>
+    <label for="poll-name">Poll name</label>
+    <% if(data !== undefined) { %>
+        <input class="form-control" name="pollName" id="poll-name" type="text" value="<%= data[0][0].poll_name %>" /> 
+   <% } else { %>
+        <input class="form-control"  name="pollName" id="poll-name" type="text" />
+   <% }  %>
+    </fieldset>
+    <input name="_csrf" type="hidden" value="<%= csrf %>" />
+    <fieldset id="options-list" class="form-group">
+            <label for="poll-name">Options</label>
+            <button class="btn btn-sm btn-outline-secondary" id="add-option">+ Add option</button>  
+            <button class="btn btn-sm btn-outline-secondary" id="remove-option"> Remove option</button>  
+        <% data[1].map(function(el) {%>
+           <input data-option="option" class="form-control" type="text" name="option" value="<%= el.option_name %>" />    
+        <% }) %>
+    </fieldset>
+    <fieldset class="form-group">
+    <label for="active">Choose the status of the poll</label>
+    <select class="form-control" id="active" name="active">
+      <option <%= data[0][0].poll_active === "Active" ? "selected" : '' %> >Active</option>
+      <option <%= data[0][0].poll_active === "Inactive" ? "selected" : '' %> >Inactive</option>
+  </select>
+  </fieldset>
+  <fieldset class="form-group">
+        <label for="type">Choose the numbers of possible answers</label>
+        <select class="form-control" id="type" name="type">
+                <option <%= data[0][0].poll_type === "One" ? "selected" : '' %> >One</option>
+                <option <%= data[0][0].poll_type === "Many" ? "selected" : '' %> >Many</option>
+        </select>
+    </fieldset>
+  <input class="btn btn-large btn-primary" type="submit" value="Update">
+  <input class="btn btn-large btn-secondary"  type="submit" value="Delete" formaction="/admin/poll/delete">
+</form>
+<%- include('partials/footer')%>
+</main>
