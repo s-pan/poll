@@ -5,9 +5,16 @@ const axios = require('axios')
 function controllers(){
 
     function getPolls (req,res) {
-        axios.get(`${config.apiPath}/polls`)
+        axios.get(`${config.apiPath}/polls`, {
+            headers: {
+                'Authorization': 'fsad213asd5435',
+            },
+            data : {
+                'secret': 'Fjasdoks1909asd'
+            }
+        })
         .then((data) => {
-            res.render('index.ejs', {data: data.data, path: config.adminPath + config.pollPath})
+            data.data.error === '401' ? res.status(401).send('unauthorized') : res.render('index.ejs', {data: data.data, path: config.adminPath + config.pollPath})
         })
         .catch(err => console.log(err))
     }

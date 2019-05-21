@@ -58,7 +58,7 @@ function data (){
             db.serialize( async ()=> {
                 db.run(`INSERT into polls (poll_name, poll_slug, poll_type, poll_active) 
                         VALUES (?, ?, ?, ?)`,
-                        [obj.pollName, slug(obj.pollName), obj.type, obj.active],
+                        [obj.pollName, obj.slug, obj.type, obj.active],
                         (err) => {
                            err ? err.code === 'SQLITE_CONSTRAINT' ? reject(`${obj.pollName} already exists`) : ''
                            : false
@@ -77,7 +77,7 @@ function data (){
 
                let a = await getForeignKey().catch((err) => console.log(err))
                let insert = db.prepare(`INSERT into poll_options (option_name, option_votes, poll_id) 
-                                        VALUES (?, ?, ?)`, (err) => (err ? reject(err) : resolve('done')) )
+                                        VALUES (?, ?, ?)`, (err) => (err ? reject(err) : resolve('created')) )
                 obj.options.forEach((option) => {
                         insert.run(option, 0, a.poll_id)
                 })
@@ -98,7 +98,7 @@ function data (){
             
     
             let options = new Promise((resolve, reject) => {
-                db.all(`SELECT option_name 
+                db.all(`SELECT option_name, option_votes
                          FROM poll_options
                          WHERE poll_id = (SELECT poll_id FROM polls WHERE poll_slug = ?)`, obj.pollName,
                         (err, result) => (err ? reject(err) : resolve(result))
@@ -111,29 +111,20 @@ function data (){
             })
             .catch((err) => reject(err))
         })
-        
-
-        // return new Promise((resolve, reject) => {
-        //     db.all(`SELECT polls.poll_name, polls.poll_id, poll_options.option_name 
-        //              FROM polls
-        //              LEFT JOIN poll_options ON polls.poll_id = poll_options.poll_id
-        //              WHERE polls.poll_name =?`, obj.pollName,
-        //             (err, result) => (err ? reject(err) : resolve(result))
-        //     )
-        // })
     }
 
 
     function deletePoll(obj){
         return new Promise((resolve, reject) => {
             db.serialize( async ()=> {
+                db.run(`DELETE FROM poll_options
+                        WHERE poll_id = (SELECT poll_id FROM polls WHERE poll_name = ?)`, 
+                        obj.pollName, 
+                        (err) => (err ? reject(err) : resolve('deleted'))        
+                )
                 db.run(`DELETE FROM polls 
                          WHERE poll_name = ?`, obj.pollName,
                     (err) => (err ? reject(err) : console.log('deleted'))
-               )
-               db.run(`DELETE FROM poll_options
-                       WHERE poll_id = (SELECT poll_id FROM polls WHERE poll_name = ?)`, obj.pollName, 
-                       (err) => (err ? reject(err) : resolve('deleted'))        
                )
             })
         })
@@ -144,24 +135,24 @@ function data (){
             db.serialize( async ()=> {
                 db.run(`UPDATE polls
                         SET poll_name = ?
-                        WHERE poll_name = ?`,
-                        [obj.newPollName, obj.pollName], 
+                        WHERE poll_slug = ?`,
+                        [obj.newPollName, obj.pollSlug], 
                         (err) => {(err ? reject(err) : '')}
                 )
                 db.run(`DELETE 
                         FROM poll_options
                         WHERE poll_id = (SELECT poll_id
                                         FROM polls
-                                        WHERE poll_name = ?)`,
-                                        obj.pollName,
+                                        WHERE poll_slug = ?)`,
+                                        obj.pollSlug,
                         (err) => (err ? reject(err) : '')
                 )
                     function getForeignKey(){ 
                         return new Promise((resolve, reject) => {
                             db.each(`SELECT poll_id
                                  FROM polls
-                                 WHERE poll_name = ?`,
-                                 obj.pollName,
+                                 WHERE poll_slug = ?`,
+                                 obj.pollSlug,
                                  (err, result) => result ? resolve(result) : reject(err)
                            )
                         })
@@ -169,7 +160,7 @@ function data (){
 
                let a = await getForeignKey().catch((err) => console.log(err))
                let insert = db.prepare(`INSERT into poll_options (option_name, option_votes, poll_id) 
-                                        VALUES (?, ?, ?)`, (err) => (err ? reject(err) : resolve('added')) )
+                                        VALUES (?, ?, ?)`, (err) => (err ? reject(err) : resolve('updated')) )
                 obj.options.forEach((option) => {
                     insert.run(option, 0, a.poll_id)
                 })
@@ -210,19 +201,19 @@ function data (){
                              FROM polls
                              WHERE poll_slug = ?`,
                              obj.pollName,
-                             (err, result) => result ? resolve(result) : reject(err)
+                             (err, result) => {
+                                 result ? resolve(result) : reject(err)
+                             }
                     )
                 })
            }
-
            let a = await getForeignKey().catch((err) => console.log(err))
              obj.vote.forEach((option) => {
-                 console.log(option)
                     db.run(`UPDATE poll_options
                             SET option_votes = option_votes + 1
                             WHERE  poll_id = ? and option_name = ?`,
                             [a.poll_id, option],
-                            (err) => (err ? console.log(err) : console.log('done'))
+                            (err) => (err ? reject(err) : resolve('success'))
                             )
             })
 

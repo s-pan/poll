@@ -6,7 +6,13 @@ const controllers = require('../controllers')
 api.use(bodyParser.urlencoded({ extended: true}));
 api.use(bodyParser.json());
 
-api.get('/polls', controllers.getPolls)
+api.get('/polls', (req, res, next) => {
+    req.headers.authorization === 'fsad213asd5435' && req.body.secret === 'Fjasdoks1909asd'
+            ? next()
+            : res.send({error: '401'}
+    )
+     
+}, controllers.getPolls)
 api.get('/poll/:pollName', controllers.getPoll)
 
 api.post('/poll/create', controllers.createPoll)

@@ -1,8 +1,12 @@
 const db = require('../db')
 const bodyParser = require('body-parser')
-db.init()
-function controllers(){
+const slug = require('slug')
 
+
+db.init()
+
+
+function controllers(){
     function getPolls(req, res) {
         db.getPolls()
         .then((result) => {
@@ -23,7 +27,8 @@ function controllers(){
         db.createPoll({pollName: req.body.pollName, 
                         options: Array.isArray(req.body.options) ? req.body.options : [req.body.options],
                         type: req.body.type,
-                        active: req.body.active
+                        active: req.body.active,
+                        slug: slug(req.body.pollName).toLowerCase()
         })
         .then((result) => {
             res.send({type: 'success', message: result})}
@@ -35,23 +40,29 @@ function controllers(){
 
     function deletePoll(req, res) {
         db.deletePoll({pollName: req.body.pollName})
-        .then((result => res.send(result)))
+        .then((result => {
+            res.send(result)}))
         .catch(err => console.log(err))
     }
 
     function updatePoll (req, res) {
-        db.updatePoll({pollName: req.params.pollName, 
+        db.updatePoll({pollSlug: req.params.pollName, 
                        newPollName: req.body.newPollName,
                        options: req.body.options
         })
         .then((result) => {
-            console.log(result)
+            res.send(result)
         })
         .catch((err) => console.log(err))
     }
 
     function votePoll(req, res){
         db.votePoll({pollName: req.params.pollName, vote: Array.isArray(req.body.option) ? req.body.option : [req.body.option] })
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => res.send(err))
+
     }
 
     function getResultsPoll(req, res){

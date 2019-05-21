@@ -5,6 +5,9 @@ module.exports = {
     staticTemplatesPath: path.dirname(require.main.filename) + '/templates/',
     adminPath:           '/admin',
     isModule:            false,
-    apiPath:             'http://localhost:8083/api'
+    apiPath:             'http://localhost:8083/api',
+    apiKey: 'fsad213asd5435',
+    apiSecret: 'Fjasdoks1909asd'
+
 
 }
