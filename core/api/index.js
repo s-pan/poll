@@ -1,18 +1,14 @@
 const api = require('express')()
 const bodyParser = require('body-parser')
 const controllers = require('../controllers')
+const auth = require('./auth.js')
 
 
 api.use(bodyParser.urlencoded({ extended: true}));
 api.use(bodyParser.json());
+api.use(auth.auth)
 
-api.get('/polls', (req, res, next) => {
-    req.headers.authorization === 'fsad213asd5435' && req.body.secret === 'Fjasdoks1909asd'
-            ? next()
-            : res.send({error: '401'}
-    )
-     
-}, controllers.getPolls)
+api.get('/polls', controllers.getPolls)
 api.get('/poll/:pollName', controllers.getPoll)
 
 api.post('/poll/create', controllers.createPoll)

@@ -41,7 +41,8 @@ function controllers(){
     function deletePoll(req, res) {
         db.deletePoll({pollName: req.body.pollName})
         .then((result => {
-            res.send(result)}))
+            res.send(result)
+        }))
         .catch(err => console.log(err))
     }
 
