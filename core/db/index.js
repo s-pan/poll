@@ -46,10 +46,51 @@ function data (){
     }
     
     function getPolls(){
-        return new Promise((resolve, reject) => {
-            db.all(`SELECT poll_name, poll_slug
-                    FROM polls`, 
-                    (err, result) => result ? resolve(result) : reject(err))
+        return new Promise ((resolve, reject) => {
+            db.all(`SELECT  
+                        a.poll_name, 
+                        a.poll_slug, 
+                        '[' || 
+                                GROUP_CONCAT('"' || b.option_name || '"')
+                             || ']'
+                            AS options
+                    FROM polls AS a
+                    LEFT JOIN poll_options AS b ON a.poll_id = b.poll_id
+                    GROUP BY  a.poll_name`,
+                    (err, result) => {
+                        result ? resolve(result) : reject(err)
+                }
+            )
+                // db.all(`SELECT polls.poll_name, polls.poll_slug
+                //          FROM polls
+                //          UNION ALL
+                //          SELECT option_name
+                //          FROM poll_options
+                //          `,
+                //         (err, result) => {
+                //             (err ? reject(err) : resolve(result))
+                //         }
+                // // )
+                // db.all(`SELECT json_group_object(
+                //             'poll_name',
+                //             json_object(
+                //                'poll_name', poll_name,
+                //                'poll_slug', poll_slug,
+                //                'options'   , ( SELECT option_name FROM poll_options WHERE poll_id = 
+                //                 (SELECT poll_id FROM polls WHERE poll_slug = poll_slug))
+                //             )
+                //      ) AS result
+                //         FROM polls    
+                //         GROUP BY poll_name                 
+                //     `,
+                //      (err, result) => {
+                //         console.log(err)
+                //         console.log(result)
+                //     }
+                // )
+            
+                    
+        
         })
     }
 
@@ -91,7 +132,9 @@ function data (){
             let poll = new Promise((resolve, reject) => {
                 db.all(`SELECT poll_name, poll_active, poll_type, poll_slug
                          FROM polls
-                         WHERE poll_slug = ?`, obj.pollName,
+                         WHERE poll_slug = ?
+                         AND poll_active = "active"`, 
+                         obj.pollSlug,
                         (err, result) => (err ? reject(err) : resolve(result))
                 )
             })
@@ -100,7 +143,8 @@ function data (){
             let options = new Promise((resolve, reject) => {
                 db.all(`SELECT option_name, option_votes
                          FROM poll_options
-                         WHERE poll_id = (SELECT poll_id FROM polls WHERE poll_slug = ?)`, obj.pollName,
+                         WHERE poll_id = (SELECT poll_id FROM polls WHERE poll_slug = ? AND poll_active = "active" )`,
+                         obj.pollSlug,
                         (err, result) => (err ? reject(err) : resolve(result))
                 )
             })
@@ -194,6 +238,7 @@ function data (){
     }
 
     function votePoll (obj){
+        console.log(obj)
         return new Promise(async(resolve, reject) => {
             function getForeignKey(){ 
                 return new Promise((resolve, reject) => {

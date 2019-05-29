@@ -9,7 +9,7 @@ api.use(bodyParser.json());
 api.use(auth.auth)
 
 api.get('/polls', controllers.getPolls)
-api.get('/poll/:pollName', controllers.getPoll)
+api.get('/poll/:pollSlug', controllers.getPoll)
 
 api.post('/poll/create', controllers.createPoll)
 api.post('/poll/delete', controllers.deletePoll)

@@ -1,10 +1,17 @@
 <%- include('partials/head.ejs')%>
 <main class="container">
     <%- include('partials/nav')%>
-<ul class="row list-group">
-<% data.map(function(el) { %>
-    <li class="list-group-item"><a href=<%= path + el.poll_slug %>><%= el.poll_name %></a></li>
-<% }) %>
-</ul>
+        <% data.map(function(el) { %>
+            <div class="row card">
+                <div class="card-body">
+                   <a class="card-title" href=<%= path + el.poll_slug %>><%= el.poll_name %></a>
+                    <ul class="card-body">
+                        <% JSON.parse(el.options).map(function(option) { %>
+                        <p class="card-text"><%= option %></p>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+        <% }) %>
 <%- include('partials/footer.ejs')%>
 </main>

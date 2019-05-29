@@ -1,8 +1,6 @@
 const express = require('express')
 const public = require('express')()
 const bodyParser = require('body-parser')
-const axios = require('axios')
-// const config = require('./config.js')
 const controllers = require('./controllers/controllers')
 const cookieParser = require('cookie-parser');
 const path = require('path')
@@ -18,10 +16,11 @@ public.use(bodyParser.json());
 public.use(cookieParser())
 public.set('view engine', 'ejs')
 public.set('views', __dirname + '/views')
-// let parseForm = bodyParser.urlencoded({ extended: false })
 
+public.get('/', controllers.getPolls)
+public.get('/poll/:poll', controllers.getPoll)
+public.post('/poll/vote/:poll', controllers.votePoll)
 
-public.get('/', controllers.getPoll)
 
 
 module.exports = public

@@ -7,6 +7,7 @@ db.init()
 
 
 function controllers(){
+
     function getPolls(req, res) {
         db.getPolls()
         .then((result) => {
@@ -16,7 +17,7 @@ function controllers(){
     }
 
     function getPoll(req, res) {
-        db.getPoll({pollName: req.params.pollName})
+        db.getPoll({pollSlug: req.params.pollSlug})
         .then((result) => {
             res.send(result)}
         )
@@ -58,6 +59,7 @@ function controllers(){
     }
 
     function votePoll(req, res){
+        console.log(req.body)
         db.votePoll({pollName: req.params.pollName, vote: Array.isArray(req.body.option) ? req.body.option : [req.body.option] })
         .then((result) => {
             res.send(result)
@@ -69,6 +71,7 @@ function controllers(){
     function getResultsPoll(req, res){
         db.getResults({poll: req.params.poll})
         .then((result) => {
+            console.log(result)
             res.send(result)
         })
         .catch(err => console.log(err))

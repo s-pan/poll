@@ -5,14 +5,16 @@ const app = require('../api/index.js')
 let before = test;
 let after = test;
 
+
 test('GET /poll/:pollSlug', (assert) => {
     before('Create poll before GET /poll/:slug', (assert) => {
         supertest(app)
            .post('/poll/create')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({pollName: 'Test poll', 
                   options: ['option1', 'option2'],
                   type: 'One',
-                  active: 'Active'
+                  active: 'active',
             })
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -22,10 +24,11 @@ test('GET /poll/:pollSlug', (assert) => {
     test('Get poll', (assert) => {
         supertest(app)
            .get('/poll/test-poll')
+           .set({'Authorization': 'fsad213asd5435'})
            .expect(200)
            .end((err, res) => {
                (err ? console.log(err) : true)
-               let expected =  [ [ { poll_name: 'Test poll', poll_active: 'Active', poll_type: 'One', poll_slug: 'test-poll' } ], [ { option_name: 'option1', option_votes: 0 }, { option_name: 'option2', option_votes: 0 } ] ]
+               let expected =  [ [ { poll_name: 'Test poll', poll_active: 'active', poll_type: 'One', poll_slug: 'test-poll' } ], [ { option_name: 'option1', option_votes: 0 }, { option_name: 'option2', option_votes: 0 } ] ]
                let actual = res.body
                assert.deepEqual(actual, expected, 'Retrieve poll')
                assert.end()
@@ -34,6 +37,7 @@ test('GET /poll/:pollSlug', (assert) => {
     after('Delete poll after GET /poll/:slug', (assert) => {
         supertest(app)
             .post('/poll/delete')
+            .set({'Authorization': 'fsad213asd5435'})
             .send({pollName: 'Test poll'})
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -48,10 +52,11 @@ test('POST /poll/delete', (assert) => {
     before('Before delete poll', (assert) => {
         supertest(app)
            .post('/poll/create')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({pollName: 'Test poll', 
                   options: ['option1', 'option2'],
                   type: 'One',
-                  active: 'Active'
+                  active: 'active'
                 })
             .end((err, res) => {
                 assert.end()
@@ -60,6 +65,7 @@ test('POST /poll/delete', (assert) => {
     test('Delete poll', (assert) => {
         supertest(app)
         .post('/poll/delete')
+        .set({'Authorization': 'fsad213asd5435'})
         .send({pollName: 'Test poll'})
         .end((err, res) => {
             (err ? console.log(err) : true)
@@ -76,10 +82,11 @@ test('POST /poll/create', (assert) => {
     test('Create poll', (assert) => {
         supertest(app)
             .post('/poll/create')
+            .set({'Authorization': 'fsad213asd5435'})
             .send({pollName: 'Test poll', 
                  options: ['option1', 'option3'],
                  type: 'Many',
-                 active: 'Active'
+                 active: 'active'
             })
             .end((er, res) => {
                 let expected =  '{"type":"success","message":"created"}'
@@ -92,6 +99,7 @@ test('POST /poll/create', (assert) => {
     after('DELETE poll after Create poll', (assert) => {
         supertest(app)
             .post('/poll/delete')
+            .set({'Authorization': 'fsad213asd5435'})
             .send({pollName: 'Test poll'})
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -105,10 +113,11 @@ test('POST poll/update/:pollSlug', (assert) => {
     before('Create poll before test poll/update/:pollName', (assert) => {
         supertest(app)
            .post('/poll/create')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({pollName: 'Test poll', 
                   options: ['option1', 'option2'],
                   type: 'One',
-                  active: 'Active'
+                  active: 'active'
             })
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -118,6 +127,7 @@ test('POST poll/update/:pollSlug', (assert) => {
     test('poll/update/:pollName', (assert) => {
         supertest(app)
            .post('/poll/update/test-poll')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({newPollName: 'New test poll',
                   options: ['option1', 'option2']
             })
@@ -132,6 +142,7 @@ test('POST poll/update/:pollSlug', (assert) => {
     after('Delete poll after test poll/update/:pollName', (assert) => {
         supertest(app)
             .post('/poll/delete')
+            .set({'Authorization': 'fsad213asd5435'})
             .send({pollName: 'New test poll'})
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -146,10 +157,11 @@ test('POST poll/vote/:pollSlug', (assert) => {
     before('CREATE poll before test poll/vote/:pollSlug', (assert) => {
         supertest(app)
            .post('/poll/create')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({pollName: 'Test poll', 
                   options: ['option1', 'option2'],
-                  type: 'One',
-                  active: 'Active'
+                  type: '',
+                  active: 'active'
             })
             .end((err, res) => {
                 (err ? console.log(err) : true)
@@ -159,6 +171,7 @@ test('POST poll/vote/:pollSlug', (assert) => {
     test('POST poll/vote/:pollSlug', (assert) => {
         supertest(app)
            .post('/poll/vote/test-poll')
+           .set({'Authorization': 'fsad213asd5435'})
            .send({option: ['option1', 'option2']})
             .end((err, res) => {
                 let expected = 'success'
@@ -168,9 +181,10 @@ test('POST poll/vote/:pollSlug', (assert) => {
             })
 
     })
-    test('POST poll/vote/:pollSlug', (assert) => {
+    test('GET poll/vote/:pollSlug', (assert) => {
         supertest(app)
            .get('/poll/test-poll')
+           .set({'Authorization': 'fsad213asd5435'})
             .end((err, res) => {
                 let expected = 1
                 let actual = res.body[1][0].option_votes
@@ -182,6 +196,7 @@ test('POST poll/vote/:pollSlug', (assert) => {
     after('DELETE poll after test poll/vote/:pollName', (assert) => {
         supertest(app)
             .post('/poll/delete')
+            .set({'Authorization': 'fsad213asd5435'})
             .send({pollName: 'Test poll'})
             .end((err, res) => {
                 (err ? console.log(err) : true)

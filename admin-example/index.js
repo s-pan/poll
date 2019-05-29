@@ -7,6 +7,8 @@ const controllers = require('./controllers/controllers')
 const cookieParser = require('cookie-parser');
 const path = require('path')
 const cs = require('csurf')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy;
 
 
 const csrf = cs({ cookie: true })
@@ -16,9 +18,10 @@ admin.use(express.static(path.join(__dirname) + '/public/public'))
 admin.use(bodyParser.urlencoded({ extended: true}));
 admin.use(bodyParser.json());
 admin.use(cookieParser())
+admin.use(passport.initialize());
+admin.use(passport.session());
 admin.set('view engine', 'ejs')
 admin.set('views', __dirname + '/views')
-// let parseForm = bodyParser.urlencoded({ extended: false })
 
 
 admin.get('/', controllers.getPolls)

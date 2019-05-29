@@ -2,19 +2,17 @@
 const config = require('../config.js')
 const axios = require('axios')
 
-function controllers(){
 
+axios.defaults.headers.common['Authorization'] = config.axiosHeadersApiKey;
+
+
+function controllers(){
     function getPolls (req,res) {
-        axios.get(`${config.apiPath}/polls`, {
-            headers: {
-                'Authorization': 'fsad213asd5435',
-            },
-            data : {
-                'secret': 'Fjasdoks1909asd'
-            }
-        })
+        axios.get(`${config.apiPath}/polls`)
         .then((data) => {
-            data.data.error === '401' ? res.status(401).send('unauthorized') : res.render('index.ejs', {data: data.data, path: config.adminPath + config.pollPath})
+            data.data.error === '401' 
+                ? res.status(401).send('unauthorized') 
+                : res.render('index.ejs', {data: data.data, path: config.adminPath + config.pollPath})
         })
         .catch(err => console.log(err))
     }
@@ -27,7 +25,9 @@ function controllers(){
     }
 
     function updatePoll (req, res) {
-        axios.post(`${config.apiPath}/poll/update/${req.params.poll}`, {newPollName: req.body.pollName, options: req.body.option})
+        axios.post(`${config.apiPath}/poll/update/${req.params.poll}`, 
+                     {newPollName: req.body.pollName, options: req.body.option}
+        )
         .then((result) => {
             res.locals.message
         })
@@ -39,18 +39,19 @@ function controllers(){
     }
 
     function createPoll(req, res) {
-        axios.post(`${config.apiPath}/poll/create`, {
+        axios.post(`${config.apiPath}/poll/create`, 
+                    {
                             pollName: req.body.pollName, 
                             options: req.body.option,
                             type: req.body.type,
                             active: req.body.active
-        })
+                    }
+        )
         .then((result) => {
             res.locals.message = result.data
-            res.render('pollCreate.ejs', {data: {pollName: req.body.pollName, options: req.body.option},csrf: req.csrfToken()})
+            res.render('pollCreate.ejs', {data: {pollName: req.body.pollName, options: req.body.option}, csrf: req.csrfToken()})
         })
-        .catch(err => res.send(err))
-        // db.addPoll({pollName: req.body.pollName, options: req.body.options})
+        .catch((err) =>console.log(err))
     }
 
     function deletePoll(req, res) {

@@ -4,7 +4,7 @@ const admin = require('./admin-example')
 const example = require('./public-example')
 var debug = require('debug')('http')
 
-debug('app', app)
+// debug('app', app)
 
 app.use('/api', api)
 app.use('/admin', admin)
