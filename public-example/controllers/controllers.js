@@ -1,8 +1,9 @@
 
-const config = require('../../core/api/config.js')
+const config = require('../config.js')
 const axios = require('axios')
+const crypto = require('crypto-js')
 
-axios.defaults.headers.common['Authorization'] = 'fsad213asd5435';
+axios.defaults.headers.common['Authorization'] = 'c-8a9q;62j@+mVbsFb}^g\GV`=LQ(mY/-1'
 
 function getPolls(req, res){
     axios.get(`${config.apiPath}/polls`)

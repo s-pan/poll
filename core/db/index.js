@@ -11,7 +11,7 @@ db.run(`PRAGMA foreign_keys = 1`, function(error)  {
 });
 
 function data (){
-    //create tables if they don't exists
+    //create tables if they don't exist
 
     function init(){
             db.serialize(()=> {
@@ -238,7 +238,6 @@ function data (){
     }
 
     function votePoll (obj){
-        console.log(obj)
         return new Promise(async(resolve, reject) => {
             function getForeignKey(){ 
                 return new Promise((resolve, reject) => {

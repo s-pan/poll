@@ -2,17 +2,17 @@
 <main class="container">
  <%- include('partials/nav.ejs')%>
 <form  action="/admin/poll/create" method="POST">
-        <legend>Create poll</legend>
-    <fieldset class="form-group">
-        <label for="poll-name">Poll name</label>
+        <legend class="mt-5">Create poll</legend>
+    <fieldset class="form-group mt-5">
+        <label for="poll-name"><strong>Poll name</strong></label>
         <input class="form-control" type="text" name="pollName" >
         <input class="form-control" name="_csrf" type="hidden" value=<%= csrf %> />
     </fieldset>
     <div id="options-list" class="form-group">
-       <label for="option">Options</label>
-       <button class="btn btn-sm btn btn-outline-link" id="add-option">+ Add option</button>  
-       <button class="btn btn-sm btn btn-outline-link" id="remove-option">- Remove option</button>  
-        <input class="form-control" data-option="option" name="option" type="text" placeholder="Option"/>
+       <label for="option"><strong>Options</strong></label>
+        <button class="btn btn-sm btn btn-outline-link" id="add-option">+ Add option</button>  
+        <button class="btn btn-sm btn btn-outline-link" id="remove-option">- Remove option</button>  
+        <input class="form-control mt-2" data-option="option" name="option" type="text" placeholder="Option"/>
        <% if(locals.message) { %>
            <% if(locals.message.type === 'error') { %>
                 <%= locals.message.message %>

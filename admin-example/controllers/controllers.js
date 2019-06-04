@@ -1,9 +1,11 @@
 
 const config = require('../config.js')
 const axios = require('axios')
+const crypto = require("crypto-js");
 
+const ciphertext = crypto.AES.encrypt(config.apiKey, config.apiSecret).toString()
 
-axios.defaults.headers.common['Authorization'] = config.axiosHeadersApiKey;
+axios.defaults.headers.common['Authorization'] = ciphertext
 
 
 function controllers(){

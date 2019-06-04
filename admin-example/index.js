@@ -1,5 +1,5 @@
 const express = require('express')
-const admin = require('express')()
+const admin = express()
 const bodyParser = require('body-parser')
 const axios = require('axios')
 const config = require('./config.js')

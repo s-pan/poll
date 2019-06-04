@@ -10,8 +10,9 @@ import axios from 'axios'
         var element = document.createElement('input')
         element.setAttribute('name', 'option')
         element.setAttribute('type', 'text')
-        element.setAttribute('class', 'form-control')
+        element.setAttribute('class', 'form-control, mt-5')
         element.setAttribute('data-option', 'option')
+        element.setAttribute('class', 'mt-5')
         optionsList.appendChild(element)
     })
 

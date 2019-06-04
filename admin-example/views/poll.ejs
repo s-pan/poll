@@ -2,33 +2,33 @@
 <main class="container">
 <%- include('partials/nav.ejs')%>
 <form class="form" action="/admin/poll/update/<%= data[0][0].poll_name %>" method="POST">
-    <fieldset class="form-group">
-    <legend>Update poll</legend>
-    <label for="poll-name">Poll name</label>
-    <% if(data !== undefined) { %>
-        <input class="form-control" name="pollName" id="poll-name" type="text" value="<%= data[0][0].poll_name %>" /> 
-   <% } else { %>
-        <input class="form-control"  name="pollName" id="poll-name" type="text" />
-   <% }  %>
+    <legend class="mt-5">Update poll</legend>
+    <fieldset class="form-group mt-4">
+        <label for="poll-name"><strong>Poll name</strong></label>
+            <% if(data !== undefined) { %>
+                <input class="form-control" name="pollName" id="poll-name" type="text" value="<%= data[0][0].poll_name %>" /> 
+            <% } else { %>
+                <input class="form-control"  name="pollName" id="poll-name" type="text" />
+            <% }  %>
     </fieldset>
     <input name="_csrf" type="hidden" value="<%= csrf %>" />
-    <fieldset id="options-list" class="form-group">
-            <label for="poll-name">Options</label>
+    <fieldset id="options-list" class="form-group mt-">
+            <label for="poll-name mt-5 bold"><strong>Options</strong></label>
             <button class="btn btn-sm btn-outline-secondary" id="add-option">+ Add option</button>  
             <button class="btn btn-sm btn-outline-secondary" id="remove-option"> Remove option</button>  
         <% data[1].map(function(el) {%>
-           <input data-option="option" class="form-control" type="text" name="option" value="<%= el.option_name %>" />    
+           <input data-option="option" class="form-control mt-2" type="text" name="option" value="<%= el.option_name %>" />    
         <% }) %>
     </fieldset>
-    <fieldset class="form-group">
-    <label for="active">Choose the status of the poll</label>
+    <fieldset class="form-group mt-5">
+    <label for="active"><strong>Choose the status of the poll</strong></label>
     <select class="form-control" id="active" name="active">
       <option <%= data[0][0].poll_active === "Active" ? "selected" : '' %> >Active</option>
       <option <%= data[0][0].poll_active === "Inactive" ? "selected" : '' %> >Inactive</option>
   </select>
   </fieldset>
-  <fieldset class="form-group">
-        <label for="type">Choose the numbers of possible answers</label>
+  <fieldset class="form-group mt-5">
+        <label for="type"><strong>Choose the numbers of possible answers</strong></label>
         <select class="form-control" id="type" name="type">
                 <option <%= data[0][0].poll_type === "One" ? "selected" : '' %> >One</option>
                 <option <%= data[0][0].poll_type === "Many" ? "selected" : '' %> >Many</option>

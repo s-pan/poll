@@ -1,5 +1,5 @@
 const express = require('express')
-const public = require('express')()
+const public = express()
 const bodyParser = require('body-parser')
 const controllers = require('./controllers/controllers')
 const cookieParser = require('cookie-parser');
