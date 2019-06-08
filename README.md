@@ -6,5 +6,5 @@ API requires authentication with simple API key, sent as HTTP Authorization requ
 
 ## API
 
-##### '/polls'
+##### `'/polls'`
 
