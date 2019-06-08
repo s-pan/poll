@@ -6,5 +6,12 @@ API requires authentication with simple API key, sent as HTTP Authorization requ
 
 ## API
 
-##### `'/polls'`
-
+| Endpoint        | Method           | Description  |
+| -------------   |:-------------:| -----:|
+| /polls           |  GET          | Get all polls |
+| /poll/:pollSlug |  GET          | Get single poll  |
+| /poll/create    | POST      |    Create poll | 
+| /poll/delete    |  POST          | Delete poll |
+| /poll/update/:pollSlug |  POST          | Update poll  |
+| /poll/vote/:pollSlug    | POST      |    Update poll votes | 
+| /poll/results/:poll    | GET      |    Get poll results | 
